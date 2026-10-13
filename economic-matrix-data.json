@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "title": "Economic Matrix // Power Scalar & Wealth Divergence Engine",
+    "baseline_year": "2026",
+    "model": "2026 Sovereign Model",
+    "disclaimer": "Educational illustration only. Not financial, tax, legal, or investment advice. Figures are approximate, lag official releases, and can change. No endorsement of any institution, policy, or political entity is implied.",
+    "last_updated": "2026-10-13",
+    "storage_key": "economic_matrix_prefs_v1",
+    "export_filename": "economic-matrix-vault.enc.txt"
+  },
+  "defaults": {
+    "user_income": 210000,
+    "capital_benchmark": 3000000000
+  },
+  "thresholds": {
+    "median_individual": 50000,
+    "income_1pct_agi": 748000,
+    "top_1pct_net_worth": 16400000,
+    "institutional_aum_tier": 25000000000000
+  },
+  "percentile_brackets": [
+    {"min": 748000, "label": "Top 1%"},
+    {"min": 500000, "label": "Top 2%"},
+    {"min": 225000, "label": "Top 5%"},
+    {"min": 162000, "label": "Top 10%"},
+    {"min": 100000, "label": "Top 20%"},
+    {"min": 65000, "label": "Top 35%"},
+    {"min": 0, "label": "Top 50%+"}
+  ],
+  "presets": {
+    "median": 50000,
+    "high": 210000,
+    "top1inc": 748000
+  },
+  "power_scalar": {
+    "level_1": {
+      "name": "Individual Large Capital Holders",
+      "description": "Public-facing owners and founders. Subject to market pricing, regulatory frameworks, and asset revaluation. They hold claims on productive assets but do not set the overall cost of capital."
+    },
+    "level_2": {
+      "name": "Large Institutional Asset Managers",
+      "description": "Entities managing multi-trillion portfolios of passive and active assets. Collectively hold substantial voting influence across major listed corporations through aggregated client capital."
+    },
+    "level_3": {
+      "name": "Monetary Authorities & Sovereign Issuers",
+      "description": "Central banks and related sovereign entities that influence interest rates, liquidity provision, and systemic backstops. They shape the conditions under which all other capital operates."
+    }
+  },
+  "stratification_tiers": [
+    {
+      "name": "High-Earner Labor Tier",
+      "description": "Upper wage or professional income still primarily dependent on active work. High marginal tax rates apply to labor income before expenses."
+    },
+    {
+      "name": "Income & Wealth Top Percentile",
+      "description": "Thresholds around the top 1% of tax returns by AGI and corresponding household net-worth entry points drawn from survey and distributional accounts."
+    },
+    {
+      "name": "Large Private Capital Holders",
+      "description": "Ownership of equity, real assets, and intellectual property that compounds independently of continuous labor input."
+    }
+  ],
+  "sources": [
+    "IRS Statistics of Income (SOI) Division — Individual income tax returns by percentile (AGI floors).",
+    "Federal Reserve Distributional Financial Accounts (DFA) — Quarterly wealth distribution by percentile.",
+    "Federal Reserve Survey of Consumer Finances (SCF) — Triennial household balance-sheet microdata.",
+    "U.S. Census Bureau Current Population Survey (CPS) / Income in the United States reports — Median and distributional income.",
+    "Bureau of Labor Statistics — Usual weekly earnings of full-time workers.",
+    "Piketty–Saez and World Inequality Database series — Historical capital vs. labor income shares.",
+    "Public company and fund reporting — Assets under management of large institutional managers."
+  ],
+  "data_integrity_notes": [
+    "Income 1% threshold (~$748k AGI): Consistent with IRS Statistics of Income percentile tables (tax year 2023 data released 2026). Distinguishes tax-return AGI from pure wage income or CPS household measures.",
+    "Top 1% net-worth entry (~$13.7M–$16.5M range): Aligns with Federal Reserve Survey of Consumer Finances (2022) and subsequent distributional updates / analyses.",
+    "Median individual earnings ~$47k–$53k: Consistent with Census CPS and BLS earnings series.",
+    "Institutional AUM tier ($10T–$30T+): Reflects public reporting of the largest global asset managers.",
+    "Top 1% wealth share ~30%+ of total household net worth: Federal Reserve Distributional Financial Accounts."
+  ],
+  "chart_labels": [
+    "Median Individual (~$50k)",
+    "Your Income",
+    "Income 1% AGI (~$748k)",
+    "Top 1% Net Worth (~$16.4M)",
+    "Capital Benchmark",
+    "Institutional AUM Tier ($25T+)"
+  ]
+}
