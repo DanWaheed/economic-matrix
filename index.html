@@ -1,1 +1,428 @@
-FULL_CONTENT_WILL_BE_INJECTED
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Matrix // Power Scalar & Wealth Divergence Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0a0c',
+                        cardbg: '#141419',
+                        accent: '#3b82f6',
+                        danger: '#ef4444',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        purpleaccent: '#8b5cf6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+        .toast { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(1rem); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .high-contrast { filter: contrast(1.2); }
+        .reduced-motion * { animation: none !important; transition: none !important; }
+        .large-text { font-size: 1.125rem; }
+        .xl-text { font-size: 1.25rem; }
+    </style>
+</head>
+<body class="bg-darkbg text-gray-100 min-h-screen font-sans antialiased p-4 md:p-8" id="mainBody">
+    <!-- Disclaimer Banner -->
+    <div class="max-w-6xl mx-auto mb-4 bg-amber-900/40 border border-amber-700 rounded-lg p-3 text-xs text-amber-100" role="alert">
+        <strong>Educational illustration only.</strong> This tool presents approximate, publicly available economic statistics for informational purposes. It is not financial, tax, legal, or investment advice. Figures are rounded, lag official releases, and can change. No endorsement of any institution, policy, or political entity is implied. Always verify primary sources. User-customized views are stored locally in your browser only.
+    </div>
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="bg-cardbg border border-gray-800 rounded-xl p-6 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-accent font-semibold">Economic Matrix // Macroeconomic Intelligence Engine</span>
+                <h1 class="text-2xl md:text-3xl font-bold mt-1">Power Scalar & Wealth Divergence Matrix</h1>
+                <p class="text-gray-400 text-sm mt-1">Beyond individual thresholds: Evaluating systemic institutional capacity, central monetary mechanisms, and structural asset concentration. Neutral, source-grounded view.</p>
+            </div>
+            <div class="bg-gray-900 border border-gray-700 px-4 py-2 rounded-lg text-right">
+                <span class="text-xs text-gray-400 block">Baseline Year</span>
+                <span class="text-lg font-mono font-bold text-accent">2026 Sovereign Model</span>
+            </div>
+        </div>
+
+        <!-- Accessibility Builder -->
+        <details class="bg-cardbg border border-gray-800 rounded-xl p-4" id="a11yPanel">
+            <summary class="font-semibold cursor-pointer text-gray-200">Accessibility & Display Builder</summary>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-sm">
+                <div>
+                    <label class="block text-gray-400 mb-1">Font scale</label>
+                    <select id="fontScale" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white">
+                        <option value="normal">Normal</option>
+                        <option value="large">Large</option>
+                        <option value="xl">Extra Large</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">Theme</label>
+                    <select id="themeSelect" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white">
+                        <option value="dark">Dark (default)</option>
+                        <option value="light">Light</option>
+                        <option value="high-contrast">High Contrast</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="reducedMotion" class="accent-accent">
+                        <span>Reduce motion</span>
+                    </label>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-3">Settings save automatically to local browser storage (not cookies, not transmitted).</p>
+        </details>
+
+        <!-- Interactive Parameters -->
+        <div class="bg-cardbg border border-gray-800 rounded-xl p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-200">Interactive Parameter Modifiers</h2>
+                <div class="flex gap-2">
+                    <select id="presetSelect" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-sm">
+                        <option value="">Load preset user profile…</option>
+                        <option value="median">Median individual earner (~$50k)</option>
+                        <option value="high">High-earner wage (~$210k)</option>
+                        <option value="top1inc">Income 1% threshold (~$748k)</option>
+                        <option value="custom">Custom (current)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1" for="userIncomeInput">Your Annual Labor Income ($): <span id="userIncomeVal" class="text-accent font-mono">210,000</span></label>
+                    <input type="range" id="userIncomeInput" min="30000" max="1500000" step="10000" value="210000" class="w-full accent-accent bg-gray-800 rounded-lg appearance-none cursor-pointer h-2" aria-valuemin="30000" aria-valuemax="1500000" aria-valuenow="210000">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1" for="billionInput">Large Capital Benchmark ($): <span id="billionVal" class="text-danger font-mono">3,000,000,000</span></label>
+                    <input type="range" id="billionInput" min="1000000000" max="10000000000" step="500000000" value="3000000000" class="w-full accent-danger bg-gray-800 rounded-lg appearance-none cursor-pointer h-2">
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Position -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-cardbg border border-gray-800 rounded-xl p-5">
+                <span class="text-xs text-gray-400 uppercase tracking-wider">Your National Income Percentile (illustrative)</span>
+                <div class="text-3xl font-mono font-bold text-accent mt-2" id="percentileDisplay">Top 7.2%</div>
+                <p class="text-xs text-gray-500 mt-1" id="percentileSubtext">Approximate wage-earner tier based on public distribution data.</p>
+            </div>
+            <div class="bg-cardbg border border-gray-800 rounded-xl p-5">
+                <span class="text-xs text-gray-400 uppercase tracking-wider">Gap to Income 1% (~$748k AGI)</span>
+                <div class="text-3xl font-mono font-bold text-warning mt-2" id="top1GapDisplay">$538,000</div>
+                <p class="text-xs text-gray-500 mt-1">Additional annual income to approximate top 1% tax-return threshold.</p>
+            </div>
+            <div class="bg-cardbg border border-gray-800 rounded-xl p-5">
+                <span class="text-xs text-gray-400 uppercase tracking-wider">Multiple vs Capital Benchmark</span>
+                <div class="text-3xl font-mono font-bold text-danger mt-2" id="ratioDisplay">14,286x</div>
+                <p class="text-xs text-gray-500 mt-1">Benchmark capital divided by your annual income.</p>
+            </div>
+        </div>
+
+        <!-- Power Scalar -->
+        <div class="bg-cardbg border border-gray-800 rounded-xl p-6 shadow-2xl space-y-4">
+            <span class="text-xs uppercase tracking-widest text-purpleaccent font-semibold">Macroeconomic Power Architecture</span>
+            <h2 class="text-xl font-bold text-gray-100">Why Focusing Only on Individuals Misses Systemic Scale</h2>
+            <p class="text-sm text-gray-300">
+                Individual high-net-worth persons operate within a larger system. Structural influence over liquidity, credit conditions, and broad equity ownership rests primarily with large-scale institutional managers and monetary authorities.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mt-4">
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-lg space-y-2">
+                    <span class="text-accent font-semibold block">Level 1: Individual Large Capital Holders</span>
+                    <p class="text-xs text-gray-400">Public-facing owners and founders. Subject to market pricing, regulatory frameworks, and asset revaluation. They hold claims on productive assets but do not set the overall cost of capital.</p>
+                </div>
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-lg space-y-2">
+                    <span class="text-warning font-semibold block">Level 2: Large Institutional Asset Managers</span>
+                    <p class="text-xs text-gray-400">Entities managing multi-trillion portfolios of passive and active assets. Collectively hold substantial voting influence across major listed corporations through aggregated client capital.</p>
+                </div>
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-lg space-y-2">
+                    <span class="text-purpleaccent font-semibold block">Level 3: Monetary Authorities & Sovereign Issuers</span>
+                    <p class="text-xs text-gray-400">Central banks and related sovereign entities that influence interest rates, liquidity provision, and systemic backstops. They shape the conditions under which all other capital operates.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stratification -->
+        <div class="bg-cardbg border border-gray-800 rounded-xl p-6 shadow-2xl space-y-4">
+            <h2 class="text-lg font-semibold text-gray-200">Income & Wealth Stratification Tiers (Illustrative)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-300">
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-lg space-y-2">
+                    <span class="text-accent font-semibold block">High-Earner Labor Tier</span>
+                    <p class="text-xs text-gray-400">Upper wage or professional income still primarily dependent on active work. High marginal tax rates apply to labor income before expenses.</p>
+                </div>
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-lg space-y-2">
+                    <span class="text-warning font-semibold block">Income & Wealth Top Percentile</span>
+                    <p class="text-xs text-gray-400">Thresholds around the top 1% of tax returns by AGI and corresponding household net-worth entry points drawn from survey and distributional accounts.</p>
+                </div>
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-lg space-y-2">
+                    <span class="text-danger font-semibold block">Large Private Capital Holders</span>
+                    <p class="text-xs text-gray-400">Ownership of equity, real assets, and intellectual property that compounds independently of continuous labor input.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="bg-cardbg border border-gray-800 rounded-xl p-6 shadow-2xl space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <h2 class="text-lg font-semibold text-gray-200">Visual Scale Comparison (Logarithmic)</h2>
+                <span class="text-xs text-gray-400 font-mono">Approximate USD values</span>
+            </div>
+            <div class="relative h-80 w-full">
+                <canvas id="scaleChart" aria-label="Logarithmic bar chart of income and wealth tiers"></canvas>
+            </div>
+        </div>
+
+        <!-- Sources & Data Review -->
+        <div class="bg-cardbg border border-gray-800 rounded-xl p-6 shadow-2xl space-y-4">
+            <h2 class="text-lg font-semibold text-gray-200">Sources & Data Integrity Review</h2>
+            <p class="text-xs text-gray-400">All figures are approximate, drawn from publicly released official statistics. Self-review notes (October 2026):</p>
+            <ul class="list-disc list-inside text-xs text-gray-400 space-y-1">
+                <li>Income 1% threshold (~$748k AGI): Consistent with IRS Statistics of Income percentile tables (tax year 2023 data released 2026). Distinguishes tax-return AGI from pure wage income or CPS household measures.</li>
+                <li>Top 1% net-worth entry (~$13.7M–$16.5M range): Aligns with Federal Reserve Survey of Consumer Finances (2022) and subsequent distributional updates / analyses.</li>
+                <li>Median individual earnings ~$47k–$53k: Consistent with Census CPS and BLS earnings series.</li>
+                <li>Institutional AUM tier ($10T–$30T+): Reflects public reporting of the largest global asset managers.</li>
+                <li>Top 1% wealth share ~30%+ of total household net worth: Federal Reserve Distributional Financial Accounts.</li>
+            </ul>
+            <details class="mt-4">
+                <summary class="font-medium text-accent cursor-pointer">Full source list</summary>
+                <ul class="list-disc list-inside text-xs text-gray-400 mt-2 space-y-1">
+                    <li>IRS Statistics of Income (SOI) Division — Individual income tax returns by percentile (AGI floors).</li>
+                    <li>Federal Reserve Distributional Financial Accounts (DFA) — Quarterly wealth distribution by percentile.</li>
+                    <li>Federal Reserve Survey of Consumer Finances (SCF) — Triennial household balance-sheet microdata.</li>
+                    <li>U.S. Census Bureau Current Population Survey (CPS) / Income in the United States reports — Median and distributional income.</li>
+                    <li>Bureau of Labor Statistics — Usual weekly earnings of full-time workers.</li>
+                    <li>Piketty–Saez and World Inequality Database series — Historical capital vs. labor income shares.</li>
+                    <li>Public company and fund reporting — Assets under management of large institutional managers.</li>
+                </ul>
+            </details>
+        </div>
+
+        <!-- FAQ -->
+        <div class="bg-cardbg border border-gray-800 rounded-xl p-6 shadow-2xl space-y-4">
+            <h2 class="text-lg font-semibold text-gray-200">Frequently Asked Questions</h2>
+            <div class="space-y-4 text-sm">
+                <div class="border-b border-gray-800 pb-3">
+                    <h3 class="font-semibold text-accent">Why can a high wage still feel constrained?</h3>
+                    <p class="text-gray-400 mt-1">National medians for individual earnings are far lower. High W-2 or equivalent income faces progressive taxation on labor while asset appreciation is taxed differently. Local cost of living further affects purchasing power.</p>
+                </div>
+                <div class="border-b border-gray-800 pb-3">
+                    <h3 class="font-semibold text-accent">Who influences the broader capital environment?</h3>
+                    <p class="text-gray-400 mt-1">Large institutional managers control substantial equity voting rights through client assets. Monetary authorities set the price of credit and liquidity conditions that affect all balance sheets.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-accent">Are these numbers exact?</h3>
+                    <p class="text-gray-400 mt-1">No. They are rounded illustrations based on the most recently released public statistics as of the baseline year. Always consult primary sources for precise figures.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / Export -->
+        <div class="flex justify-between items-center bg-cardbg border border-gray-800 rounded-xl p-4">
+            <span class="text-xs text-gray-500 font-mono">Local cache active · Educational use only</span>
+            <button id="exportBtn" class="bg-accent hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-blue-400">
+                Export Encrypted Snapshot
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 space-y-2 z-50" aria-live="polite"></div>
+
+    <script>
+        const userIncomeInput = document.getElementById('userIncomeInput');
+        const billionInput = document.getElementById('billionInput');
+        const userIncomeVal = document.getElementById('userIncomeVal');
+        const billionVal = document.getElementById('billionVal');
+        const percentileDisplay = document.getElementById('percentileDisplay');
+        const top1GapDisplay = document.getElementById('top1GapDisplay');
+        const ratioDisplay = document.getElementById('ratioDisplay');
+        const presetSelect = document.getElementById('presetSelect');
+        const exportBtn = document.getElementById('exportBtn');
+        const toastContainer = document.getElementById('toastContainer');
+
+        const fontScale = document.getElementById('fontScale');
+        const themeSelect = document.getElementById('themeSelect');
+        const reducedMotion = document.getElementById('reducedMotion');
+        const mainBody = document.getElementById('mainBody');
+
+        let scaleChart;
+
+        const STORAGE_KEY = 'economic_matrix_prefs_v1';
+
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: 'bg-green-800 border-green-600 text-green-100',
+                warning: 'bg-amber-800 border-amber-600 text-amber-100',
+                error: 'bg-red-800 border-red-600 text-red-100',
+                info: 'bg-blue-800 border-blue-600 text-blue-100'
+            };
+            const el = document.createElement('div');
+            el.className = `toast px-4 py-2 rounded-lg border text-sm shadow-lg ${colors[type] || colors.info}`;
+            el.textContent = message;
+            toastContainer.appendChild(el);
+            setTimeout(() => el.remove(), 4000);
+        }
+
+        function savePrefs() {
+            const prefs = {
+                income: userIncomeInput.value,
+                billion: billionInput.value,
+                font: fontScale.value,
+                theme: themeSelect.value,
+                motion: reducedMotion.checked
+            };
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+            } catch (e) {}
+        }
+
+        function loadPrefs() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const p = JSON.parse(raw);
+                if (p.income) userIncomeInput.value = p.income;
+                if (p.billion) billionInput.value = p.billion;
+                if (p.font) fontScale.value = p.font;
+                if (p.theme) themeSelect.value = p.theme;
+                if (typeof p.motion === 'boolean') reducedMotion.checked = p.motion;
+                applyA11y();
+            } catch (e) {}
+        }
+
+        function applyA11y() {
+            mainBody.classList.remove('large-text', 'xl-text', 'high-contrast', 'reduced-motion');
+            document.documentElement.classList.remove('light');
+            if (fontScale.value === 'large') mainBody.classList.add('large-text');
+            if (fontScale.value === 'xl') mainBody.classList.add('xl-text');
+            if (themeSelect.value === 'high-contrast') mainBody.classList.add('high-contrast');
+            if (themeSelect.value === 'light') document.documentElement.classList.add('light');
+            if (reducedMotion.checked) mainBody.classList.add('reduced-motion');
+            savePrefs();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('scaleChart').getContext('2d');
+            scaleChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Median Individual (~$50k)', 'Your Income', 'Income 1% AGI (~$748k)', 'Top 1% Net Worth (~$16.4M)', 'Capital Benchmark', 'Institutional AUM Tier ($25T+)'],
+                    datasets: [{
+                        label: 'USD ($)',
+                        data: [50000, parseInt(userIncomeInput.value), 748000, 16400000, parseInt(billionInput.value), 25000000000000],
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#9333ea'],
+                        borderWidth: 0,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { type: 'logarithmic', grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 9 } } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function updateCalculations() {
+            const inc = parseFloat(userIncomeInput.value);
+            const bil = parseFloat(billionInput.value);
+
+            userIncomeVal.textContent = inc.toLocaleString();
+            billionVal.textContent = bil.toLocaleString();
+
+            let percentile = "Top 50%+";
+            if (inc >= 748000) percentile = "Top 1%";
+            else if (inc >= 500000) percentile = "Top 2%";
+            else if (inc >= 225000) percentile = "Top 5%";
+            else if (inc >= 162000) percentile = "Top 10%";
+            else if (inc >= 100000) percentile = "Top 20%";
+            else if (inc >= 65000) percentile = "Top 35%";
+
+            percentileDisplay.textContent = percentile;
+
+            const top1Gap = Math.max(0, 748000 - inc);
+            top1GapDisplay.textContent = '$' + top1Gap.toLocaleString();
+
+            const ratio = bil / inc;
+            ratioDisplay.textContent = Math.round(ratio).toLocaleString() + 'x';
+
+            if (scaleChart) {
+                scaleChart.data.datasets[0].data[1] = inc;
+                scaleChart.data.datasets[0].data[4] = bil;
+                scaleChart.update();
+            }
+            savePrefs();
+        }
+
+        function exportVaultData() {
+            try {
+                const payload = {
+                    timestamp: new Date().toISOString(),
+                    user_income: userIncomeInput.value,
+                    capital_benchmark: billionInput.value,
+                    power_scalar: "Institutional Asset Management & Monetary Authority Capacity",
+                    source_references: [
+                        "IRS Statistics of Income (SOI)",
+                        "Federal Reserve Distributional Financial Accounts",
+                        "Federal Reserve Survey of Consumer Finances",
+                        "U.S. Census Bureau CPS / Income reports",
+                        "Piketty-Saez / World Inequality Database series"
+                    ],
+                    disclaimer: "Educational illustration only. Not advice."
+                };
+                const encrypted = CryptoJS.AES.encrypt(JSON.stringify(payload), '5dbef112-d353-4489-8498-d253bb95e149').toString();
+                const blob = new Blob([encrypted], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'economic-matrix-vault.enc.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Encrypted snapshot exported successfully.', 'success');
+            } catch (err) {
+                showToast('Export failed. Check browser permissions.', 'error');
+            }
+        }
+
+        // Event listeners
+        userIncomeInput.addEventListener('input', updateCalculations);
+        billionInput.addEventListener('input', updateCalculations);
+        exportBtn.addEventListener('click', exportVaultData);
+
+        fontScale.addEventListener('change', applyA11y);
+        themeSelect.addEventListener('change', applyA11y);
+        reducedMotion.addEventListener('change', applyA11y);
+
+        presetSelect.addEventListener('change', () => {
+            const v = presetSelect.value;
+            if (v === 'median') userIncomeInput.value = 50000;
+            else if (v === 'high') userIncomeInput.value = 210000;
+            else if (v === 'top1inc') userIncomeInput.value = 748000;
+            if (v) updateCalculations();
+            presetSelect.value = '';
+        });
+
+        // Init
+        loadPrefs();
+        window.onload = () => {
+            initChart();
+            updateCalculations();
+        };
+    </script>
+</body>
+</html>
